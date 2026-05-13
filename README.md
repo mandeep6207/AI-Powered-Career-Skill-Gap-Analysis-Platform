@@ -8,13 +8,17 @@ Run frontend:
 cd frontend
 npm install
 npm run dev
+# or for production-style serve
+npm run build
+npm run preview
 ```
 
-Run backend:
+Run backend (create venv recommended):
 
 ```bash
 cd backend
 python -m pip install -r requirements.txt
+python db_init.py  # create sqlite schema
 python app.py
 ```
 
@@ -24,5 +28,6 @@ API endpoints:
 - POST /analyze
 - GET /history
 - GET /profile
+- POST /logout
 
 This repo scaffolds a minimal working example for local development.
