@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: skillgap-backend
+    ports:
+      - "5000:5000"
+    environment:
+      FLASK_ENV: production
+      DATABASE_URL: /app/database.db
+      SECRET_KEY: ${SECRET_KEY:-prod-secret-key}
+    volumes:
+      - ./backend/database.db:/app/database.db
+      - ./backend/logs:/app/logs
+    networks:
+      - skillgap-network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.frontend
+    container_name: skillgap-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      VITE_API_URL: http://backend:5000
+    depends_on:
+      - backend
+    networks:
+      - skillgap-network
+    restart: unless-stopped
+
+networks:
+  skillgap-network:
+    driver: bridge
