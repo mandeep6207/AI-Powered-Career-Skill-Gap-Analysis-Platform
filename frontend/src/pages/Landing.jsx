@@ -10,6 +10,10 @@ export default function Landing(){
         <Link className="btn btn-primary btn-lg me-2" to="/signup">Get started</Link>
         <Link className="btn btn-outline-primary btn-lg" to="/login">Sign in</Link>
       </p>
+      <div className="d-flex justify-content-center mt-3">
+        <a href="#features" className="btn btn-sm btn-link me-2">See features</a>
+        <a href="#testimonials" className="btn btn-sm btn-link">Read testimonials</a>
+      </div>
 
       <section className="mt-5">
         <div className="row">
@@ -27,7 +31,7 @@ export default function Landing(){
           </div>
         </div>
 
-        <div className="mt-5">
+        <div id="testimonials" className="mt-5">
           <h4>What users say</h4>
           <div className="row">
             <div className="col-md-4">
