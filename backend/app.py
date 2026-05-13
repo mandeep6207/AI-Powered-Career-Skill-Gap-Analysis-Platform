@@ -119,5 +119,14 @@ def profile():
     missing_count = len(latest['missing_skills'].split(',')) if latest and latest['missing_skills'] else 0
     return jsonify({'username': user['username'], 'email': user['email'], 'target_role': user['target_role'], 'latest_match': latest_match, 'missing_count': missing_count})
 
+
+@app.route('/logout', methods=['POST'])
+@auth_required
+def logout():
+    conn = get_db(); cur = conn.cursor()
+    cur.execute('UPDATE users SET token=NULL WHERE id=?', (request.user['id'],))
+    conn.commit(); conn.close()
+    return jsonify({'status':'logged_out'})
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
