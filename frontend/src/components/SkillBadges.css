@@ -1,0 +1,66 @@
+.skill-badges-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+.skill-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border: 2px solid #ccc;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  background-color: #f9f9f9;
+  transition: all 0.3s ease;
+}
+
+.skill-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.skill-name {
+  color: #333;
+  white-space: nowrap;
+}
+
+.proficiency-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  color: white;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+@media (max-width: 768px) {
+  .skill-badges-container {
+    gap: 8px;
+  }
+
+  .skill-badge {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .proficiency-indicator {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.dark-mode .skill-badge {
+  background-color: #2d3748;
+  border-color: #4a5568;
+}
+
+.dark-mode .skill-name {
+  color: #e2e8f0;
+}
