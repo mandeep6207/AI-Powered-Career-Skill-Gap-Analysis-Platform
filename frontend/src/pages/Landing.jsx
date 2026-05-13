@@ -26,6 +26,21 @@ export default function Landing(){
             <p>Monitor progress and history on a dashboard.</p>
           </div>
         </div>
+
+        <div className="mt-5">
+          <h4>What users say</h4>
+          <div className="row">
+            <div className="col-md-4">
+              <blockquote className="blockquote">"Helped me focus my learning"<footer className="blockquote-footer">Jane Doe, Data Scientist</footer></blockquote>
+            </div>
+            <div className="col-md-4">
+              <blockquote className="blockquote">"Clear roadmap and milestones"<footer className="blockquote-footer">John Smith, Web Developer</footer></blockquote>
+            </div>
+            <div className="col-md-4">
+              <blockquote className="blockquote">"Easy to track progress week-by-week"<footer className="blockquote-footer">Alex Lee, AI Engineer</footer></blockquote>
+            </div>
+          </div>
+        </div>
       </section>
     </div>
   )
