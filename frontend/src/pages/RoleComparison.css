@@ -1,0 +1,192 @@
+.role-comparison-container {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 30px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.role-comparison-container h2 {
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.role-selector {
+  margin-bottom: 30px;
+}
+
+.role-selector p {
+  margin-bottom: 15px;
+  font-weight: 600;
+  color: #555;
+}
+
+.role-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.role-btn {
+  padding: 10px 15px;
+  border: 2px solid;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.role-btn:hover {
+  transform: translateY(-2px);
+}
+
+.role-btn.active {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.compare-btn {
+  padding: 12px 30px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 30px;
+}
+
+.compare-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.compare-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.comparison-results {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.comparison-card {
+  padding: 20px;
+  border-top: 4px solid;
+  border-radius: 8px;
+  background: #f9f9f9;
+  transition: all 0.3s ease;
+}
+
+.comparison-card:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.comparison-card h3 {
+  margin: 0 0 20px 0;
+  color: #333;
+  font-size: 18px;
+}
+
+.comparison-metric {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 8px;
+  background: #e0e0e0;
+  border-radius: 4px;
+  margin: 0 10px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.metric-value {
+  font-weight: 600;
+  color: #333;
+  min-width: 50px;
+  text-align: right;
+}
+
+.missing-skills-preview {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #ddd;
+}
+
+.missing-skills-preview strong {
+  display: block;
+  margin-bottom: 10px;
+  color: #555;
+  font-size: 13px;
+}
+
+.missing-skills-preview ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.missing-skills-preview li {
+  padding: 5px 0;
+  color: #666;
+  font-size: 13px;
+}
+
+.missing-skills-preview li:before {
+  content: "• ";
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+@media (max-width: 768px) {
+  .role-comparison-container {
+    padding: 20px;
+    margin: 20px;
+  }
+
+  .role-buttons {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .comparison-results {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dark-mode .role-comparison-container {
+  background: #1a202c;
+}
+
+.dark-mode .role-comparison-container h2,
+.dark-mode .role-comparison-card h3 {
+  color: #e2e8f0;
+}
+
+.dark-mode .comparison-card {
+  background: #2d3748;
+}
+
+.dark-mode .missing-skills-preview {
+  border-top-color: #4a5568;
+}
+
+.dark-mode .missing-skills-preview strong,
+.dark-mode .missing-skills-preview li {
+  color: #cbd5e0;
+}
