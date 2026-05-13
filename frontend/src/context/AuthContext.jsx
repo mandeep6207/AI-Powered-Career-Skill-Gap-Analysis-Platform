@@ -29,7 +29,10 @@ export function AuthProvider({ children }) {
     return res.data
   }
 
-  const logout = () => setToken(null)
+  const logout = async () => {
+    try { await api.post('/logout') } catch(e){}
+    setToken(null)
+  }
 
   return (
     <AuthContext.Provider value={{ token, user, login, signup, logout }}>
