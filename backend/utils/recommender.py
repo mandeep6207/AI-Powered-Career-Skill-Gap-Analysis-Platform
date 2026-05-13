@@ -8,32 +8,50 @@ ROLE_SKILLS = {
     'Cybersecurity Analyst': ['Networking', 'Linux', 'Security Fundamentals', 'Incident Response']
 }
 
+
 def analyze(target_role: str, current_skills: List[str], proficiency:str, weekly_hours:int) -> Dict:
     required = ROLE_SKILLS.get(target_role, [])
     current = [s.strip().lower() for s in current_skills]
 
+    # match found and missing
     found = [r for r in required if r.lower() in current]
     missing = [r for r in required if r.lower() not in current]
 
-    match_percentage = int(len(found) / max(len(required),1) * 100)
+    # base match score from skills
+    base_match = (len(found) / max(len(required), 1)) * 100
 
-    # priority: missing skills
+    # proficiency factor: if user is advanced, boost score
+    prof_factor = {'Beginner': 0.6, 'Intermediate': 0.85, 'Advanced': 1.0}
+    pf = prof_factor.get(proficiency, 0.85)
+
+    # weekly_hours affects learning speed and also readiness estimation
+    hours_factor = min(max(weekly_hours / 10.0, 0.3), 2.0)
+
+    match_percentage = int(min(100, base_match * pf))
+
+    # priority ordering: missing skills first, then skills that are central to role
     priority = missing[:]
 
-    # estimated weeks: assume 2-6 weeks per missing skill based on proficiency
-    per_skill = {'Beginner':6,'Intermediate':4,'Advanced':2}
-    weeks_per = per_skill.get(proficiency,4)
-    estimated_weeks = weeks_per * len(missing)
-    if weekly_hours >= 15:
-        estimated_weeks = max(1, int(estimated_weeks * 0.6))
-    elif weekly_hours >= 8:
-        estimated_weeks = int(estimated_weeks * 0.9)
+    # per-skill effort estimate in weeks (more for beginners)
+    effort_by_proficiency = {'Beginner':8, 'Intermediate':5, 'Advanced':3}
+    per_skill_base = effort_by_proficiency.get(proficiency, 5)
 
-    recommendations = [f"Study {s}: aim {weeks_per} weeks" for s in priority]
-
+    # estimated time adjusts by weekly hours
+    estimated_weeks = 0
     roadmap = []
     for i, s in enumerate(priority):
-        roadmap.append({'skill':s, 'weeks': weeks_per, 'milestone': f'Learn {s}'})
+        weeks = max(1, int(per_skill_base / hours_factor))
+        estimated_weeks += weeks
+        roadmap.append({'skill': s, 'weeks': weeks, 'milestone': f'Complete {s} basics -> intermediate'})
+
+    # recommendations: include focused actions and study plan
+    recommendations = []
+    for s in priority:
+        recommendations.append(f"Focus on {s}: target {int(max(1, per_skill_base / hours_factor))} weeks, prioritize hands-on projects.")
+
+    # if nothing missing, recommend deepening and projects
+    if not missing:
+        recommendations = [f"You already cover core skills for {target_role}. Focus on projects and specialization."]
 
     return {
         'target_role': target_role,
