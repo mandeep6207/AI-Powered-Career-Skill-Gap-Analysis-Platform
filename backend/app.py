@@ -3,9 +3,11 @@ from flask_cors import CORS
 import sqlite3, os, json, datetime, secrets, time
 from werkzeug.security import generate_password_hash, check_password_hash
 from utils.recommender import analyze
+from logger import Logger
 
 BASE_DIR = os.path.dirname(__file__)
 DB_PATH = os.path.join(BASE_DIR, 'database.db')
+logger = Logger('skillgap_app')
 
 # Rate limiter (simple in-memory)
 rate_limit_store = {}
@@ -64,7 +66,9 @@ def signup():
     username = data.get('username')
     email = data.get('email')
     password = data.get('password')
-    if not (username and email and password): return jsonify({'error':'missing'}),400
+    if not (username and email and password): 
+        logger.warning('Signup attempt with missing fields', email=email)
+        return jsonify({'error':'missing'}),400
     pwdhash = generate_password_hash(password)
     conn = get_db(); cur = conn.cursor()
     try:
@@ -114,6 +118,8 @@ def analyze_route():
     # parse skills
     skills = [s.strip() for s in current_skills.split(',') if s.strip()]
     result = analyze(target_role, skills, proficiency, weekly_hours)
+    
+    logger.info('Analysis completed', user_id=request.user['id'], role=target_role, match=result['match_percentage'])
 
     conn = get_db(); cur = conn.cursor()
     cur.execute('INSERT INTO assessments (user_id,date,target_role,match_score,missing_skills,details) VALUES (?,?,?,?,?,?)',
