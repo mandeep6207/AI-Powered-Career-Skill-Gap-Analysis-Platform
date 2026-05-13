@@ -7,11 +7,19 @@ export default function Assessment(){
   const [proficiency, setProficiency] = useState('Intermediate')
   const [hours, setHours] = useState(6)
   const [result, setResult] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
 
   const submit = async e => {
     e.preventDefault()
-    const res = await api.post('/analyze', { target_role: role, current_skills: skills, proficiency, weekly_hours: hours })
-    setResult(res.data)
+    setError(null); setLoading(true)
+    try {
+      const res = await api.post('/analyze', { target_role: role, current_skills: skills, proficiency, weekly_hours: hours })
+      setResult(res.data)
+    } catch(err){
+      setError(err?.response?.data?.error || 'Analysis failed')
+    }
+    setLoading(false)
   }
 
   return (
@@ -46,14 +54,18 @@ export default function Assessment(){
           <input type="number" className="form-control" value={hours} onChange={e=>setHours(e.target.value)} />
         </div>
 
-        <button className="btn btn-primary">Analyze</button>
+        <button className="btn btn-primary" disabled={loading}>{loading ? 'Analyzing…' : 'Analyze'}</button>
       </form>
-
+      {error && <div className="alert alert-danger mt-3">{error}</div>}
       {result && (
-        <div className="mt-4">
+        <div className="mt-4 card p-3">
           <h5>Match: {result.match_percentage}%</h5>
-          <p>Missing: {result.missing_skills.join(', ')}</p>
-          <p>Estimated weeks: {result.estimated_weeks}</p>
+          <p><strong>Missing:</strong> {result.missing_skills.length ? result.missing_skills.join(', ') : 'None'}</p>
+          <p><strong>Estimated weeks to readiness:</strong> {result.estimated_weeks}</p>
+          <h6>Top recommendations</h6>
+          <ul>
+            {result.recommendations.map((r,i)=> <li key={i}>{r}</li>)}
+          </ul>
         </div>
       )}
     </div>
