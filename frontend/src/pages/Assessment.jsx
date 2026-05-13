@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import api from '../services/api'
+import { searchSkills, COMMON_SKILLS } from '../utils/skillSearch'
 
 export default function Assessment(){
   const [role, setRole] = useState('Data Scientist')
@@ -9,6 +10,25 @@ export default function Assessment(){
   const [result, setResult] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [suggestions, setSuggestions] = useState([])
+
+  const handleSkillsInput = (val) => {
+    setSkills(val)
+    // Get suggestions from last entered word
+    const lastWord = val.split(',').pop().trim()
+    if (lastWord.length >= 2) {
+      setSuggestions(searchSkills(lastWord, COMMON_SKILLS))
+    } else {
+      setSuggestions([])
+    }
+  }
+
+  const addSkillSuggestion = (skill) => {
+    const parts = skills.split(',')
+    parts[parts.length - 1] = skill
+    setSkills(parts.join(', ') + ', ')
+    setSuggestions([])
+  }
 
   const submit = async e => {
     e.preventDefault()
@@ -37,7 +57,12 @@ export default function Assessment(){
         </div>
         <div className="mb-3">
           <label>Current skills (comma separated)</label>
-          <input className="form-control" value={skills} onChange={e=>setSkills(e.target.value)} />
+          <input className="form-control" value={skills} onChange={e=>handleSkillsInput(e.target.value)} placeholder="e.g., Python, React, SQL" />
+          {suggestions.length > 0 && (
+            <div className="list-group mt-2" style={{maxHeight: '150px', overflowY: 'auto'}}>
+              {suggestions.map((s,i)=> <button key={i} type="button" className="list-group-item list-group-item-action text-start" onClick={() => addSkillSuggestion(s)}>{s}</button>)}
+            </div>
+          )}
         </div>
 
         <div className="mb-3">
