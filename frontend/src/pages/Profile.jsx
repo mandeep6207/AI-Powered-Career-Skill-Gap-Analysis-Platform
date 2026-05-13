@@ -14,6 +14,7 @@ export default function Profile(){
       <p><strong>Email:</strong> {profile.email}</p>
       <p><strong>Target role:</strong> {profile.target_role || '-'}</p>
       <p><strong>Latest match:</strong> {profile.latest_match || 'N/A'}</p>
+      <p className="mt-2"><a href="/roadmap" className="btn btn-sm btn-outline-secondary">View Roadmap</a></p>
     </div>
   )
 }
