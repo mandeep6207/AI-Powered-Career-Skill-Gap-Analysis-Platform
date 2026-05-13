@@ -1,11 +1,22 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import sqlite3, os, json, datetime, secrets
+import sqlite3, os, json, datetime, secrets, time
 from werkzeug.security import generate_password_hash, check_password_hash
 from utils.recommender import analyze
 
 BASE_DIR = os.path.dirname(__file__)
 DB_PATH = os.path.join(BASE_DIR, 'database.db')
+
+# Rate limiter (simple in-memory)
+rate_limit_store = {}
+
+def check_rate_limit(ip, limit=100, window=60):
+    key = f'{ip}:{int(time.time() // window)}'
+    count = rate_limit_store.get(key, 0)
+    if count >= limit:
+        return False
+    rate_limit_store[key] = count + 1
+    return True
 
 def get_db():
     conn = sqlite3.connect(DB_PATH)
@@ -21,7 +32,22 @@ def init_db():
     conn.close()
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": ["http://localhost:3000", "http://localhost:5173"]}})
+
+# Add security headers middleware
+@app.after_request
+def add_security_headers(response):
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['X-Frame-Options'] = 'DENY'
+    response.headers['X-XSS-Protection'] = '1; mode=block'
+    return response
+
+# Rate limiting middleware
+@app.before_request
+def before_request():
+    ip = request.remote_addr
+    if not check_rate_limit(ip):
+        return jsonify({'error': 'Rate limit exceeded'}), 429
 
 init_db()
 
